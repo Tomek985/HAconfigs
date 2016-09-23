@@ -1,0 +1,78 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: !secret location_name
+  # Location required to calculate the time the sun rises and sets
+  latitude:  !secret location_latitude
+  longitude: !secret location_longitude
+  # Impacts weather/sunrise data
+  elevation: 1
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: America/New_York
+  customize:  !include customize.yaml
+
+# Show links to resources in log and frontend
+# introduction:
+
+# Enables the frontend
+frontend:
+
+http:
+  # Uncomment this to add a password (recommended!)
+  # api_password: !secret http_passswd
+
+# Checks for available updates
+updater:
+
+# Discover some devices automatically
+# discovery:
+
+# Enables support for tracking state changes over time.
+history:
+
+# View all events in a logbook
+logbook:
+
+# Allows you to issue voice commands from the frontend
+conversation:
+
+# In external Files
+sensor:     !include sensors.yaml 
+group:      !include groups.yaml
+automation: !include automation.yaml
+notify:     !include notify.yaml
+
+zwave:
+  usb_path: /dev/ttyZWAVE
+  config_path: /share/CACHEDEV1_DATA/.qpkg/Entware-ng/config
+  polling_interval: 6000
+
+camera:
+  - platform: mjpeg
+    mjpeg_url: http://192.168.5.13/video3.mjpg
+    name: Back Yard
+  - platform: mjpeg
+    mjpeg_url: http://192.168.5.12/video3.mjpg
+    name: Front Yard
+  - platform: generic
+    still_image_url: https://radblast.wunderground.com/cgi-bin/radar/WUNIDS_map?station=OKX&brand=wui&num=6&delay=15&type=N0R&frame=0&scale=1&noclutter=0&showstorms=0&mapx=400&mapy=240&centerx=400&centery=240&transx=0&transy=0&showlabels=1&severe=0&rainsnow=0&lightning=0&smooth=0&rand=24524646&lat=0&lon=0&label=you
+    name: NYC
+      
+media_player:
+  - platform: cast
+    host: Chromecast.home
+  - platform: braviatv
+    host: 192.168.5.28
+
+device_tracker:
+  consider_home: 330
+  platform: actiontec
+  host: 192.168.5.1
+  username: admin
+  password: !secret actiontec_passwd
+
+apcupsd:
+  host: 127.0.0.1
+  port: 3551
+

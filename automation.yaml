@@ -1,0 +1,51 @@
+- alias: heal at 2:31am
+  trigger:
+    platform: time
+    after: '2:31:00'
+  action:
+    service: zwave.heal_network
+
+- alias: Laundry Finished
+  trigger:
+    platform: state
+    entity_id: sensor.washing_machine
+    from: Washing
+    to:   Idle
+    for:
+      seconds: 30
+  action:   
+    service: notify.hangouts_everybody
+    data:
+      title: "Laundry Room"
+      message: Washing Complete!
+
+- alias: Smoke Fire Alarm (1st Fl)
+  trigger:
+    platform: state
+    entity_id: sensor.status_smoke_co_alarm_1
+  condition:
+    condition: or
+    conditions:
+      - condition: state
+        entity_id: sensor.status_smoke_co_alarm_1
+        state: 'Fire Detected'
+      - condition: state
+        entity_id: sensor.status_smoke_co_alarm_1
+        state: 'Carbon Monoxide Detected'
+  action:   
+    service: notify.hangouts_tomek
+    data:
+      title: "Smoke Fire Alarm"
+      message: "Triggered on 1st Floor!"
+
+- alias: Smoke Fire Alarm Test (1st Fl)
+  trigger:
+    platform: state
+    entity_id: sensor.status_smoke_co_alarm_1
+    from: Idle
+    to:   "Alarm Testing"
+  action:   
+    service: notify.hangouts_tomek
+    data:
+      title: "Smoke Fire Alarm"
+      message: "TEST: Triggered on 1st Floor!"

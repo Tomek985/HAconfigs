@@ -1,0 +1,39 @@
+- name: hangouts_tomek
+  platform: xmpp
+  sender:    !secret hangouts_name
+  password:  !secret hangouts_passwd
+  recipient: !secret hangouts_tomek
+
+- name: hangouts_piotrek
+  platform: xmpp
+  sender:    !secret hangouts_name
+  password:  !secret hangouts_passwd
+  recipient: !secret hangouts_piotrek
+
+- name: hangouts_ela
+  platform: xmpp
+  sender:    !secret hangouts_name
+  password:  !secret hangouts_passwd
+  recipient: !secret hangouts_ela
+
+- name: hangouts_andrzej
+  platform: xmpp
+  sender:    !secret hangouts_name
+  password:  !secret hangouts_passwd
+  recipient: !secret hangouts_andrzej
+
+- name: hangouts_dominika
+  platform: xmpp
+  sender:    !secret hangouts_name
+  password:  !secret hangouts_passwd
+  recipient: !secret hangouts_dominika
+
+- name: hangouts_everybody
+  platform: group
+  services:
+    - service: hangouts_tomek
+    - service: hangouts_piotrek
+    - service: hangouts_ela
+    - service: hangouts_andrzej
+    - service: hangouts_dominika
+

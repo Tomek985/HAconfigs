@@ -1,0 +1,107 @@
+- platform: speedtest
+  server_id: 6166
+  hour:
+    - 8
+    - 12
+    - 16
+    - 20
+  monitored_conditions:
+    - ping
+    - download
+    - upload
+
+- platform: wunderground
+  api_key: !secret wu_api_key
+  pws_id:  !secret wu_pws_id
+  monitored_conditions:
+      - weather
+      - temp_c
+      - feelslike_c
+      - heat_index_c
+      - dewpoint_c
+      - wind_kph
+      - wind_mph
+      - UV
+      - pressure_in
+      - pressure_mb
+      - wind_dir
+      - wind_string
+      - relative_humidity
+      - visibility_mi
+      - visibility_km
+      - precip_today_in
+      - precip_today_metric
+
+- platform: apcupsd
+  resources:
+    - bcharge
+    - linev
+    - status
+    - timeleft
+
+- platform: time_date
+  display_options:
+    - 'time'
+    - 'date'
+
+- platform: worldclock
+  time_zone: Europe/Warsaw
+  name: Poland
+
+- platform: systemmonitor
+  resources:
+    - type: memory_use_percent
+    - type: processor_use
+    - type: since_last_boot
+
+#####################
+#                   #
+# T E M P L A T E S #
+#                   #
+#####################
+
+- platform: template
+  sensors:
+
+# SMOKE ALARMS
+
+    status_smoke_co_alarm_1:
+      value_template: >-
+          {%- if is_state("sensor.cosmoke_alarm_alarm_type_6", "13") %}
+              Idle
+          {%- elif is_state("sensor.cosmoke_alarm_alarm_type_6", "1") %}
+              Fire Detected
+          {%- elif is_state("sensor.cosmoke_alarm_alarm_type_6", "2") %}
+              Carbon Monoxide Detected
+          {%- elif is_state("sensor.cosmoke_alarm_alarm_type_6", "12") %}
+              Alarm Testing
+          {% else %}
+              Unknown Alarm Type
+          {%- endif %}
+
+      friendly_name: 'Alarm (1st Floor)'
+
+    battery_level_smoke_co_alarm_1:
+      value_template: '{{states.sensor.cosmoke_alarm_alarm_type_6.attributes.battery_level}}'
+      friendly_name: 'Battery (1st Floor)'
+      unit_of_measurement: '%'
+
+# SPEED TEST
+
+# Z-WAVE OUTLETS
+
+    washing_machine:
+        value_template: >-
+          {% if states('sensor.washing_machine_current_5') | float == 0.0 %}
+             Off
+          {% elif states('sensor.washing_machine_current_5') | float < 3.0 %}
+             Standby
+          {% elif states('sensor.washing_machine_current_5') | float < 10.0 %}
+             Idle
+          {% elif states('sensor.washing_machine_current_5') | float < 350.0 %}
+             Washing
+          {% else %}
+             WTF
+          {% endif %}
+
+        friendly_name: 'Washing Machine'
